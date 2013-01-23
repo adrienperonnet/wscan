@@ -8,7 +8,9 @@ import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 from scapy.all import IP,Ether,TCP,send,sr,conf
+from scapy.all import L3RawSocket
 conf.verb=0
+conf.L3socket=L3RawSocket #Mandatory to speak with loopback interface
 
 parser = argparse.ArgumentParser(description='Scan a firewall.',epilog="smoothy project")
 parser.add_argument('host', metavar='host', type=str,help='Host to scan.')
@@ -23,7 +25,7 @@ class PacketTrain:
 		self.target=host
 		default_packet=IP(dst=host)
 		self.train_packets=default_packet/TCP(dport=cp)
-		self.final_packet=default_packet/TCP(dport=op)
+		self.final_packet=default_packet/TCP(dport=op,flags="S")
 		self.send_time=0
 		self.delta_time=0
 	def __str__(self):
