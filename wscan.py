@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# *-* coding: UTF-8 *-*
+
 import argparse
 
 #Supress Warning message
@@ -28,7 +31,9 @@ class PacketTrain:
 	def send(self):
 		for i in range(1,args.pn):
 			send(self.train_packets)
-		ans,re=sr(self.final_packet)
+		ans,re=sr(self.final_packet,timeout=2)
+		if ans == []:
+			raise Exception("Timeout: The specified open port may be not open, try -op to change it")
 		return ans[0][1].time-ans[0][0].sent_time
 
 #We build the train of packet:
